@@ -51,7 +51,7 @@ Movie.init(
       allowNull: false
     },
     overview: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING(50000)
     },
     releaseDate: {
       type: DataTypes.DATE
