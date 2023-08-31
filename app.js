@@ -13,6 +13,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(session({ secret: 'ssshhhhh', saveUninitialized: true, resave: false }));
 
+function loginRequired(req, res, next) {
+    if (!req.session.userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+    } else {
+        next()
+    }
+}
+
 // ROUTES HERE:
 app.get('/movies', async (req, res) => {
     const allMovies = await Movie.findAll();
@@ -48,39 +56,39 @@ app.post('/logout', (req, res) => {
     }
 });
 
-app.get('/ratings', async (req, res) => {
+app.get('/ratings', loginRequired, async (req, res) => {
     const { userId } = req.session;
 
 
-    if (!userId) {
-        res.status(401).json({ error: 'Unauthorized' });
-    } else {
-        const user = await User.findByPk(userId);
-        const ratings = await user.getRatings({
-            include: {
-                model: Movie,
-                attributes: ['title'],
-            },
-        });
-        res.json(ratings);
-    }
+    // if (!userId) {
+    //     res.status(401).json({ error: 'Unauthorized' });
+    // } else {
+    const user = await User.findByPk(userId);
+    const ratings = await user.getRatings({
+        include: {
+            model: Movie,
+            attributes: ['title'],
+        },
+    });
+    res.json(ratings);
+    // }
 });
 
-app.post('ratings', async (req, res) => {
+app.post('ratings', loginRequired, async (req, res) => {
     const { userId } = req.session;
 
-    if (!userId) {
-        res.status(401).json({ error: 'Unauthorized' });
-    } else {
-        const { movieId, score } = req.body;
+    // if (!userId) {
+    //     res.status(401).json({ error: 'Unauthorized' });
+    // } else {
+    const { movieId, score } = req.body;
 
-        const user = await User.findByPk(userId);
-        const rating = await user.createRating({
-            movieId: movieId,
-            score: score
-        });
-        res.json(rating);
-    }
+    const user = await User.findByPk(userId);
+    const rating = await user.createRating({
+        movieId: movieId,
+        score: score
+    });
+    res.json(rating);
+    // }
 });
 
 
