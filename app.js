@@ -39,7 +39,49 @@ app.post('/auth', async (req, res) => {
     }
 });
 
+app.post('/logout', (req, res) => {
+    if (!req.session.userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+    } else {
+        req.session.destroy();
+        res.json({ success: true });
+    }
+});
 
+app.get('/ratings', async (req, res) => {
+    const { userId } = req.session;
+
+
+    if (!userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+    } else {
+        const user = await User.findByPk(userId);
+        const ratings = await user.getRatings({
+            include: {
+                model: Movie,
+                attributes: ['title'],
+            },
+        });
+        res.json(ratings);
+    }
+});
+
+app.post('ratings', async (req, res) => {
+    const { userId } = req.session;
+
+    if (!userId) {
+        res.status(401).json({ error: 'Unauthorized' });
+    } else {
+        const { movieId, score } = req.body;
+
+        const user = await User.findByPk(userId);
+        const rating = await user.createRating({
+            movieId: movieId,
+            score: score
+        });
+        res.json(rating);
+    }
+});
 
 
 ViteExpress.listen(app, port, () => console.log(`Server is listening on http://localhost:${port}`));
