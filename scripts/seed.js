@@ -32,42 +32,59 @@ const usersInDB = userData.map(async (user) => {
 
 await Promise.all(usersInDB)
 
-// const ratingsInDB = await Promise.all(
-//     usersInDB.flatMap(async (user) => {
-//         const randomMovies = lodash.sampleSize(moviesInDB, 10);
+// const usersToCreate = []
 
-//         const movieRatings = await Promise.all(randomMovies.map(async (movie) => {
-//             return Rating.create({
-//                 score: lodash.random(1, 5),
-//                 userId: user.userId,
-//                 movieId: movie.movieId
-//             });
-//         }));
-//         return movieRatings;
-//     }),
+// for (let i = 1; i <= 10; i++) {
+//     usersToCreate.push({
+//         email: `user${i}@test.com`,
+//         password: 'test'
+//     })
+// }
+
+// const usersInDB = await Promise.all(
+//     usersToCreate.map((user) => {
+//         return User.create(user)
+//     })
 // );
 
-// console.log(ratingsInDB);
+// console.log(usersInDB)
 
 const ratingsInDB = await Promise.all(
     usersInDB.flatMap(async (user) => {
         const randomMovies = lodash.sampleSize(moviesInDB, 10);
 
         const movieRatings = await Promise.all(randomMovies.map(async (movie) => {
-            const ratingData = {
+            return Rating.create({
                 score: lodash.random(1, 5),
                 userId: user.userId,
                 movieId: movie.movieId
-            };
-
-            console.log("Creating rating with data:", ratingData);
-
-            const createdRating = await Rating.create(ratingData);
-            return createdRating;
+            });
         }));
         return movieRatings;
     }),
 );
+
+console.log(ratingsInDB);
+
+// const ratingsInDB = await Promise.all(
+//     usersInDB.flatMap(async (user) => {
+//         const randomMovies = lodash.sampleSize(moviesInDB, 10);
+
+//         const movieRatings = await Promise.all(randomMovies.map(async (movie) => {
+//             const ratingData = {
+//                 score: lodash.random(1, 5),
+//                 userId: user.userId,
+//                 movieId: movie.movieId
+//             };
+
+//             console.log("Creating rating with data:", ratingData);
+
+//             const createdRating = await Rating.create(ratingData);
+//             return createdRating;
+//         }));
+//         return movieRatings;
+//     }),
+// );
 
 // console.log("Created ratings:", ratingsInDB);
 
