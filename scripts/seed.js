@@ -48,23 +48,39 @@ await Promise.all(usersInDB)
 // );
 
 // console.log(usersInDB)
-
 const ratingsInDB = await Promise.all(
-    usersInDB.flatMap(async (user) => {
+    usersInDB.flatMap((user) => {
         const randomMovies = lodash.sampleSize(moviesInDB, 10);
 
-        const movieRatings = await Promise.all(randomMovies.map(async (movie) => {
+        const movieRatings = randomMovies.map((movie) => {
             return Rating.create({
                 score: lodash.random(1, 5),
                 userId: user.userId,
                 movieId: movie.movieId
             });
-        }));
+        });
         return movieRatings;
     }),
 );
 
 console.log(ratingsInDB);
+
+// const ratingsInDB = await Promise.all(
+//     usersInDB.flatMap(async (user) => {
+//         const randomMovies = lodash.sampleSize(moviesInDB, 10);
+
+//         const movieRatings = await Promise.all(randomMovies.map(async (movie) => {
+//             return Rating.create({
+//                 score: lodash.random(1, 5),
+//                 userId: user.userId,
+//                 movieId: movie.movieId
+//             });
+//         }));
+//         return movieRatings;
+//     }),
+// );
+
+// console.log(ratingsInDB);
 
 // const ratingsInDB = await Promise.all(
 //     usersInDB.flatMap(async (user) => {

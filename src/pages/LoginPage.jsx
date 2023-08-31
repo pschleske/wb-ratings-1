@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+
   const handleLogin = async (event, formData) => {
     event.preventDefault()
+
     const res = await axios.post('/auth', formData);
 
     if (res.data.success) {

@@ -74,7 +74,7 @@ app.get('/ratings', loginRequired, async (req, res) => {
     // }
 });
 
-app.post('ratings', loginRequired, async (req, res) => {
+app.post('/ratings', loginRequired, async (req, res) => {
     const { userId } = req.session;
 
     // if (!userId) {

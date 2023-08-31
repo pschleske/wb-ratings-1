@@ -1,12 +1,12 @@
 import { useLoaderData, Link } from "react-router-dom";
 
 export default function AllMoviesPage() {
-  const { movies } = useLoaderData()
+  const { movies } = useLoaderData();
 
-  const movieListItems = movies.map((movie) => (
-    <li key={movie.movieId}>
-      <Link to={`/movies/${movie.movieId}`}>
-        {movie.title}
+  const movieListItems = movies.map(({ movieId, title }) => (
+    <li key={movieId}>
+      <Link to={`/movies/${movieId}`}>
+        {title}
       </Link>
     </li>
   ))

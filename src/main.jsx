@@ -35,12 +35,12 @@ const router = createBrowserRouter(
         path='movies/:movieId'
         element={<MovieDetailPage />}
         loader={async ({ params }) => {
-          const res = await axios(`/movies/${params.movieId}`)
+          const res = await axios.get(`/movies/${params.movieId}`)
           return { movie: res.data };
         }}
       />
       <Route
-        path='Login'
+        path='login'
         element={<LoginPage />}
       />
       <Route

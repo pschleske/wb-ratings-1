@@ -6,11 +6,12 @@ export default function YourRatingsPage() {
 
   const ratingsList = ratings.map(({ ratingId, score, movie, movieId }) => {
     const { title } = movie;
+
     return (
       <li key={ratingId}>
         <Link to={`/movies/${movieId}`} >
           {title}
-        </Link>
+        </Link>:
         {score}
       </li>
     )
