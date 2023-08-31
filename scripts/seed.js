@@ -1,6 +1,7 @@
 import { Movie, Rating, User, db } from '../src/model.js';
 import movieData from './data/movies.json' assert {type: 'json'};
 import userData from './data/users.json' assert {type: 'json'};
+import lodash from 'lodash';
 
 console.log('Syncing database...');
 
@@ -30,6 +31,45 @@ const usersInDB = userData.map(async (user) => {
 });
 
 await Promise.all(usersInDB)
+
+// const ratingsInDB = await Promise.all(
+//     usersInDB.flatMap(async (user) => {
+//         const randomMovies = lodash.sampleSize(moviesInDB, 10);
+
+//         const movieRatings = await Promise.all(randomMovies.map(async (movie) => {
+//             return Rating.create({
+//                 score: lodash.random(1, 5),
+//                 userId: user.userId,
+//                 movieId: movie.movieId
+//             });
+//         }));
+//         return movieRatings;
+//     }),
+// );
+
+// console.log(ratingsInDB);
+
+const ratingsInDB = await Promise.all(
+    usersInDB.flatMap(async (user) => {
+        const randomMovies = lodash.sampleSize(moviesInDB, 10);
+
+        const movieRatings = await Promise.all(randomMovies.map(async (movie) => {
+            const ratingData = {
+                score: lodash.random(1, 5),
+                userId: user.userId,
+                movieId: movie.movieId
+            };
+
+            console.log("Creating rating with data:", ratingData);
+
+            const createdRating = await Rating.create(ratingData);
+            return createdRating;
+        }));
+        return movieRatings;
+    }),
+);
+
+// console.log("Created ratings:", ratingsInDB);
 
 // console.log(usersInDB)
 
